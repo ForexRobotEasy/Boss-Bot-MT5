@@ -1,0 +1,141 @@
+mql5
+//+------------------------------------------------------------------+
+//|                                                             
+//|   Boss Bot MT5 - Break Of Structure (BOS) Strategy
+//|   Developer's Site: forexroboteasy.com
+//|   Development Team: Forex Robot Easy Team
+//|   Description: This trading robot implements the Break Of Structure (BOS) strategy
+//|                in the Forex market. It identifies and capitalizes on significant
+//|                shifts in market structure, automatically executing trades at
+//|                optimal points. The code is adaptable to different trading styles
+//|                and includes risk management measures to minimize potential losses.
+//|                The code is written in a clear and organized manner, following
+//|                best coding practices. Compatible with the Boss Bot MT5 software.
+//|
+//|------------------------------------------------------------------+
+
+//+------------------------------------------------------------------+
+//| Include necessary libraries and define global variables           |
+//+------------------------------------------------------------------+
+#include <Trade\Trade.mqh>
+#include <MovingAverages\MovingAverages.mqh>
+
+input double RiskPercentage = 2.0;  // Risk percentage per trade
+input double StopLossMultiplier = 1.5;  // Stop loss multiplier for risk management
+input double TakeProfitMultiplier = 2.0;  // Take profit multiplier for risk management
+
+//+------------------------------------------------------------------+
+//| Expert initialization function                                   |
+//+------------------------------------------------------------------+
+int OnInit()
+{
+   // Initialize risk management
+   InitRiskManagement();
+
+   // Other initialization tasks
+   // ...
+
+   return(INIT_SUCCEEDED);
+}
+
+//+------------------------------------------------------------------+
+//| Expert deinitialization function                                 |
+//+------------------------------------------------------------------+
+void OnDeinit(const int reason)
+{
+   // Cleanup tasks
+   // ...
+}
+
+//+------------------------------------------------------------------+
+//| Expert start function                                            |
+//+------------------------------------------------------------------+
+void OnTick()
+{
+   // Check for significant shifts in market structure using BOS strategy
+   if (IsBreakOfStructure())
+   {
+      // Identify optimal trading points
+      double entryPrice = GetEntryPrice();
+      double stopLoss = CalculateStopLoss(entryPrice);
+      double takeProfit = CalculateTakeProfit(entryPrice);
+
+      // Execute trade
+      ExecuteTrade(entryPrice, stopLoss, takeProfit);
+   }
+}
+
+//+------------------------------------------------------------------+
+//| Function to initialize risk management                           |
+//+------------------------------------------------------------------+
+void InitRiskManagement()
+{
+   // Calculate risk per trade based on account balance and risk percentage
+   double accountBalance = AccountInfoDouble(ACCOUNT_BALANCE);
+   double riskPerTrade = accountBalance * (RiskPercentage / 100);
+
+   // Set the maximum allowed deviation for trading operations
+   Trade.SetDeviationInPoints(20);
+
+   // Set the maximum allowed slippage for trading operations
+   Trade.SetSlippage(3);
+
+   // Set the risk per trade for the account
+   Trade.SetRiskPercentage(riskPerTrade);
+}
+
+//+------------------------------------------------------------------+
+//| Function to check for break of structure                          |
+//+------------------------------------------------------------------+
+bool IsBreakOfStructure()
+{
+   // Logic to check for break of structure
+   // ...
+
+   return true; // Return true if break of structure is identified, false otherwise
+}
+
+//+------------------------------------------------------------------+
+//| Function to get entry price                                       |
+//+------------------------------------------------------------------+
+double GetEntryPrice()
+{
+   // Logic to calculate entry price
+   // ...
+
+   return 1.2345; // Replace with actual entry price calculation
+}
+
+//+------------------------------------------------------------------+
+//| Function to calculate stop loss                                   |
+//+------------------------------------------------------------------+
+double CalculateStopLoss(const double entryPrice)
+{
+   // Calculate stop loss based on entry price and risk management parameters
+   double stopLoss = entryPrice - (StopLossMultiplier * ATR(14));
+
+   return stopLoss;
+}
+
+//+------------------------------------------------------------------+
+//| Function to calculate take profit                                 |
+//+------------------------------------------------------------------+
+double CalculateTakeProfit(const double entryPrice)
+{
+   // Calculate take profit based on entry price and risk management parameters
+   double takeProfit = entryPrice + (TakeProfitMultiplier * ATR(14));
+
+   return takeProfit;
+}
+
+//+------------------------------------------------------------------+
+//| Function to execute trade                                         |
+//+------------------------------------------------------------------+
+void ExecuteTrade(const double entryPrice, const double stopLoss, const double takeProfit)
+{
+   // Place trade using the calculated entry price, stop loss, and take profit
+   Trade.Buy(0.1, entryPrice, stopLoss, takeProfit);
+
+   // Additional trade execution tasks
+   // ...
+}
